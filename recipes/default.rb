@@ -44,11 +44,13 @@ splunk_file = splunk_package_version +
   end
 
 remote_file "/opt/#{splunk_file}" do
+  not_if { ::File.exist?(splunk_cmd) }
   source "#{node['splunkstorm']['forwarder_root']}/#{node['splunkstorm']['forwarder_version']}/universalforwarder/linux/#{splunk_file}"
   action :create_if_missing
 end
 
 package splunk_package_version do
+  not_if { ::File.exist?(splunk_cmd) }
   source "/opt/#{splunk_file}"
   case node['platform_family']
   when 'rhel'
@@ -60,16 +62,18 @@ package splunk_package_version do
   end
 end
 
+#clean up package dir
+file "/opt/#{splunk_file}" do
+  only_if { ::File.exists?("/opt/#{splunk_file}") }
+  action :delete
+end
+
 execute "#{splunk_cmd} start --accept-license --answer-yes" do
-  not_if do
-    `#{splunk_cmd} status --accept-license | grep 'splunkd'`.chomp! =~ /^splunkd is running/
-  end
+  not_if { `#{splunk_cmd} status --accept-license | grep 'splunkd'`.chomp! =~ /^splunkd is running/ }
 end
 
 execute "#{splunk_cmd} enable boot-start" do
-  not_if do
-    File.symlink?('/etc/rc4.d/S20splunk')
-  end
+  not_if { File.symlink?('/etc/rc4.d/S20splunk') }
 end
 
 service 'splunk' do
@@ -104,16 +108,12 @@ else
 end
 
 splunk_password = node['splunkstorm']['auth'].split(':')[1]
-execute "#{splunk_cmd} edit user admin -password #{splunk_password} -roles admin -auth admin:changeme && echo true > /opt/splunk_setup_passwd" do
-  not_if do
-    File.exists?('/opt/splunk_setup_passwd')
-  end
+execute "#{splunk_cmd} edit user admin -password #{splunk_password} -roles admin -auth admin:changeme && echo true > #{node['splunkstorm']['forwarder_home']}/splunk_setup_passwd" do
+  not_if { ::File.exists?("#{node['splunkstorm']['forwarder_home']}/splunk_setup_passwd") }
 end
 
-execute "#{splunk_cmd} install app #{license_file} -auth #{node['splunkstorm']['auth']} && echo true > /opt/splunk_setup_license" do
-  not_if do
-    File.exists?('/opt/splunk_setup_license')
-  end
+execute "#{splunk_cmd} install app #{license_file} -auth #{node['splunkstorm']['auth']} && echo true > #{node['splunkstorm']['forwarder_home']}/splunk_setup_license" do
+  not_if { ::File.exists?("#{node['splunkstorm']['forwarder_home']}/splunk_setup_license") }
 end
 
 template '/etc/init.d/splunk' do
