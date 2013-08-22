@@ -9,8 +9,8 @@ default['splunkstorm']['auth']                 = "admin:SomePassword123"
 
 # Splunk Forwarder Version 
 default['splunkstorm']['forwarder_root']       = "http://download.splunk.com/releases"
-default['splunkstorm']['forwarder_version']    = "4.3.3"
-default['splunkstorm']['forwarder_build']      = "128297"
+default['splunkstorm']['forwarder_version']    = "5.0.4"
+default['splunkstorm']['forwarder_build']      = "172409"
 
 # location of license file (to bypass databag lookup)
 default['splunkstorm']['license_file']         = nil
