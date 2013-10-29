@@ -68,6 +68,11 @@ file "/opt/#{splunk_file}" do
   action :delete
 end
 
+template "#{node['splunkstorm']['forwarder_root']}/etc/system/local/inputs.conf" do
+  source 'inputs.conf.erb'
+  mode 0644
+end
+
 execute "#{splunk_cmd} start --accept-license --answer-yes" do
   not_if { `#{splunk_cmd} status --accept-license | grep 'splunkd'`.chomp! =~ /^splunkd is running/ }
 end

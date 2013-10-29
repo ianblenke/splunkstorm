@@ -18,3 +18,5 @@ default['splunkstorm']['license_file']         = nil
 # Splunk License Data Bag
 default['splunkstorm']['license_databag']      = "licenses"
 default['splunkstorm']['license_databag_item'] = "storm"
+
+default['splunkstorm']['server_name'] = nil
