@@ -68,7 +68,7 @@ file "/opt/#{splunk_file}" do
   action :delete
 end
 
-template "#{node['splunkstorm']['forwarder_root']}/etc/system/local/inputs.conf" do
+template "#{node['splunkstorm']['forwarder_home']}/etc/system/local/inputs.conf" do
   source 'inputs.conf.erb'
   mode 0644
 end
