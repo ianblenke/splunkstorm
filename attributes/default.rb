@@ -20,3 +20,5 @@ default['splunkstorm']['license_databag']      = "licenses"
 default['splunkstorm']['license_databag_item'] = "storm"
 
 default['splunkstorm']['server_name'] = nil
+default['splunkstorm']['tz'] = 'UTC'
+default['splunkstorm']['input'] = {}
