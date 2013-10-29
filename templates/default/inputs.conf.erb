@@ -1,9 +1,9 @@
 [default]
-host = <%= node[:splunkstorm][:server_name].nil? ? `hostname`. : node[:splunkstorm][:server_name] %>
+host = <%= node[:splunkstorm][:server_name].nil? ? `hostname`.strip : node[:splunkstorm][:server_name] %>
 
 <% node[:splunkstorm][:inputs].each do |key,value| %>
 [monitor://<%= key %>] 
 disabled = false
 sourcetype=<%= value %> 
-_tzhint=<%= node[:splunkstorm][:tz]
+_tzhint=<%= node[:splunkstorm][:tz] %>
 <% end %>
