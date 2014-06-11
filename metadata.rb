@@ -1,3 +1,4 @@
+name             "splunkstorm"
 maintainer       "Aaron Wallis"
 maintainer_email "aaron.wallis@lexer.com.au"
 license          "Apache 2.0"
